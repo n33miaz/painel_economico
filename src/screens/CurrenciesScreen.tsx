@@ -9,6 +9,7 @@ import {
   Button,
 } from "react-native";
 
+import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
@@ -118,19 +119,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.background,
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: "gray",
+    color: colors.textSecondary,
   },
   errorText: {
     fontSize: 16,
-    color: "red",
+    color: colors.danger,
     textAlign: "center",
     marginBottom: 10,
   },
@@ -138,11 +140,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: colors.transparent,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: colors.cardBackground,
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -160,10 +162,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
+    color: colors.textPrimary,
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 16,
+    color: colors.textSecondary,
   },
 });

@@ -4,6 +4,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { colors } from "../theme/colors";
+
 import CurrenciesScreen from "../screens/CurrenciesScreen";
 import GlobalCurrenciesScreen from "../screens/GlobalCurrenciesScreen";
 import IndexesScreen from "../screens/IndexesScreen";
@@ -24,11 +26,10 @@ function TabNavigator() {
           } else if (route.name === "Índices") {
             iconName = focused ? "stats-chart" : "stats-chart-outline";
           }
-          // https://icons.expo.fyi/
           return <Ionicons name={iconName as any} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "tomato",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.inactive,
         headerShown: false,
       })}
     >

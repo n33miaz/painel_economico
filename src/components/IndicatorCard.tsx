@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { colors } from "../theme/colors";
+
 interface IndicatorCardProps {
   name: string;
   value: number;
@@ -18,7 +20,7 @@ export default function IndicatorCard({
   onPress,
 }: IndicatorCardProps) {
   const isPositive = variation >= 0;
-  const variationColor = isPositive ? "#4CAF50" : "#F44336";
+  const variationColor = isPositive ? colors.success : colors.danger;
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -34,7 +36,7 @@ export default function IndicatorCard({
         <Ionicons
           name={isPositive ? "arrow-up" : "arrow-down"}
           size={16}
-          color="#fff"
+          color={colors.textLight}
         />
         <Text style={styles.variationText}>{variation.toFixed(2)}%</Text>
       </View>
@@ -44,7 +46,7 @@ export default function IndicatorCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: colors.cardBackground,
     borderRadius: 12,
     padding: 20,
     marginVertical: 8,
@@ -61,11 +63,11 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: colors.textPrimary,
   },
   cardValue: {
     fontSize: 22,
-    color: "#000",
+    color: colors.textSecondary,
     marginTop: 4,
   },
   variationContainer: {
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   variationText: {
-    color: "#FFFFFF",
+    color: colors.textLight,
     fontSize: 16,
     fontWeight: "bold",
     marginLeft: 4,

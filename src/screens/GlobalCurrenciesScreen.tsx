@@ -9,6 +9,7 @@ import {
   Button,
 } from "react-native";
 
+import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
@@ -127,11 +128,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
     paddingTop: 16,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: colors.background,
   },
   errorText: {
     fontSize: 18,
