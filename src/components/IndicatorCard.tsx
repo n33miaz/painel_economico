@@ -1,0 +1,78 @@
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+
+interface IndicatorCardProps {
+  name: string;
+  value: number;
+  variation: number;
+}
+
+export default function IndicatorCard({
+  name,
+  value,
+  variation,
+}: IndicatorCardProps) {
+  const isPositive = variation >= 0;
+  const variationColor = isPositive ? "#4CAF50" : "#F44336";
+
+  return (
+    <View style={styles.card}>
+      <View>
+        <Text style={styles.cardTitle}>{name.split("/")[0]}</Text>
+        <Text style={styles.cardValue}>R$ {value.toFixed(2)}</Text>
+      </View>
+      <View
+        style={[styles.variationContainer, { backgroundColor: variationColor }]}
+      >
+        <Ionicons
+          name={isPositive ? "arrow-up" : "arrow-down"}
+          size={16}
+          color="#fff"
+        />
+        <Text style={styles.variationText}>{variation.toFixed(2)}%</Text>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  cardValue: {
+    fontSize: 22,
+    color: "#000",
+    marginTop: 4,
+  },
+  variationContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 16,
+  },
+  variationText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 4,
+  },
+});

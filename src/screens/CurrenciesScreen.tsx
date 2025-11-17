@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import api, { CurrencyData } from "../services/api";
+import IndicatorCard from "../components/IndicatorCard";
 
 export default function CurrenciesScreen() {
   const [currencies, setCurrencies] = useState<CurrencyData[]>([]);
@@ -49,11 +50,11 @@ export default function CurrenciesScreen() {
         data={currencies}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text>Compra: R$ {Number(item.buy).toFixed(2)}</Text>
-            <Text>Variação: {item.variation}%</Text>
-          </View>
+          <IndicatorCard
+            name={item.name}
+            value={Number(item.buy)}
+            variation={Number(item.variation)}
+          />
         )}
       />
     </View>
