@@ -7,6 +7,13 @@ export interface CurrencyData {
   variation: number;
 }
 
+export interface IndexData {
+  name: string;
+  location: string;
+  points: number;
+  variation: number;
+}
+
 const api = axios.create({
   baseURL: 'https://economia.awesomeapi.com.br/json',
 });
