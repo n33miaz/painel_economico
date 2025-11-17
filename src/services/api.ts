@@ -17,9 +17,9 @@ export interface CurrencyData {
 export function isCurrencyData(item: any): item is CurrencyData {
   return (
     item &&
-    typeof item.code === "string" && 
+    typeof item.code === "string" &&
     typeof item.name === "string" &&
-    typeof item.buy === "string" &&
+    typeof item.buy === "number" &&
     typeof item.variation === "string"
   );
 }

@@ -10,7 +10,6 @@ import {
 import Routes from "./src/routes";
 import { ActivityIndicator, View } from "react-native";
 
-
 export default function App() {
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,

@@ -1,0 +1,83 @@
+// src/hooks/useApiData.ts
+import { useState, useEffect, useCallback } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+interface UseApiDataResult<T> {
+  data: T[] | null;
+  loading: boolean;
+  error: string | null;
+  fetchData: () => Promise<void>; // Retorna a função para ser usada em refresh
+}
+
+function useApiData<T>(
+  apiEndpoint: string,
+  storageKey: string,
+  typeGuard: (item: any) => item is T,
+  cacheDuration: number = 10 * 60 * 1000,
+  filterFn?: (item: T) => boolean
+): UseApiDataResult<T> {
+  const [data, setData] = useState<T[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchDataInternal = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const cachedDataJSON = await AsyncStorage.getItem(storageKey);
+      if (cachedDataJSON) {
+        const { timestamp, data: cachedData } = JSON.parse(cachedDataJSON);
+        if (Date.now() - timestamp < cacheDuration) {
+          setData(cachedData);
+          setLoading(false);
+          return;
+        }
+      }
+
+      const response = await fetch(apiEndpoint);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const apiData = await response.json();
+      const dataArray = Object.values(apiData);
+      const processedData = dataArray
+        .filter(typeGuard)
+        .filter(filterFn || (() => true));
+
+      setData(processedData);
+      const dataToCache = { timestamp: Date.now(), data: processedData };
+      await AsyncStorage.setItem(storageKey, JSON.stringify(dataToCache));
+    } catch (e: any) {
+      console.error(`Erro em ${storageKey}:`, e);
+      setError(e.message || "Ocorreu um erro.");
+      // Tenta usar dados antigos do cache se houver
+      if (data === null) {
+        const cachedDataJSON = await AsyncStorage.getItem(storageKey);
+        if (cachedDataJSON) {
+          const { data: cachedData } = JSON.parse(cachedDataJSON);
+          setData(cachedData);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    apiEndpoint,
+    storageKey,
+    typeGuard,
+    cacheDuration,
+    filterFn,
+    data,
+    cacheDuration,
+  ]); // Dependencies list
+
+  useEffect(() => {
+    fetchDataInternal();
+  }, [fetchDataInternal]);
+
+  // Retorna a função fetchDataInternal para ser usada em refresh
+  return { data, loading, error, fetchData: fetchDataInternal };
+}
+
+export default useApiData;
