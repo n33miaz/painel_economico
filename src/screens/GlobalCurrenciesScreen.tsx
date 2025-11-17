@@ -100,7 +100,7 @@ export default function GlobalCurrenciesScreen() {
             name={item.name.split("/")[0]}
             value={Number(item.buy)}
             variation={Number(item.variation)}
-            symbol={currencySymbols[(item as any).code] || "$"}
+            symbol={currencySymbols[item.code] || "$"}
             onPress={() => handleOpenModal(item)}
           />
         )}

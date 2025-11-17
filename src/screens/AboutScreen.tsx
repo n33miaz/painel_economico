@@ -20,12 +20,12 @@ export default function AboutScreen() {
   return (
     <View style={styles.container}>
       <Ionicons name="information-circle-outline" size={80} color="#3498db" />
-      <Text style={styles.title}>Painel Econômico BR</Text>
+      <Text style={styles.title}>Painel Econômico</Text>
       <Text style={styles.subtitle}>
         Versão {Constants.expoConfig?.version}
       </Text>
       <Text style={styles.description}>
-        Aplicativo desenvolvido por Neemias Cormino Manso.
+        Aplicativo desenvolvido por <br></br>Neemias Cormino Manso.
       </Text>
       <Button title="Ver meu LinkedIn" onPress={handlePress} />
     </View>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontFamily: "Roboto_700Bold",
-    marginVertical: 15,
+    marginVertical: 10,
     textAlign: "center",
   },
   subtitle: {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginHorizontal: 20,
-    marginBottom: 30,
+    marginBottom: 15,
     fontFamily: "Roboto_400Regular",
   },
 });

@@ -7,6 +7,7 @@ const api = axios.create({
 export default api;
 
 export interface CurrencyData {
+  code: string;
   name: string;
   buy: number;
   sell: number | null;
@@ -16,6 +17,7 @@ export interface CurrencyData {
 export function isCurrencyData(item: any): item is CurrencyData {
   return (
     item &&
+    typeof item.code === "string" && 
     typeof item.name === "string" &&
     typeof item.buy === "string" &&
     typeof item.variation === "string"
