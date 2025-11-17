@@ -1,23 +1,25 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface IndicatorCardProps {
   name: string;
   value: number;
   variation: number;
+  onPress: () => void;
 }
 
 export default function IndicatorCard({
   name,
   value,
   variation,
+  onPress,
 }: IndicatorCardProps) {
   const isPositive = variation >= 0;
   const variationColor = isPositive ? "#4CAF50" : "#F44336";
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View>
         <Text style={styles.cardTitle}>{name.split("/")[0]}</Text>
         <Text style={styles.cardValue}>R$ {value.toFixed(2)}</Text>
@@ -32,7 +34,7 @@ export default function IndicatorCard({
         />
         <Text style={styles.variationText}>{variation.toFixed(2)}%</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

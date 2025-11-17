@@ -56,6 +56,7 @@ export default function IndexesScreen() {
             name={item.name}
             value={item.points || item.variation}
             variation={item.variation}
+            onPress={() => alert("A implementar")}
           />
         )}
       />

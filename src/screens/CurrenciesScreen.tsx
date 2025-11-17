@@ -5,6 +5,8 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  Modal,
+  Button,
 } from "react-native";
 
 import api, { CurrencyData } from "../services/api";
@@ -13,6 +15,11 @@ import IndicatorCard from "../components/IndicatorCard";
 export default function CurrenciesScreen() {
   const [currencies, setCurrencies] = useState<CurrencyData[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyData | null>(
+    null
+  );
 
   async function fetchData() {
     try {
@@ -44,6 +51,11 @@ export default function CurrenciesScreen() {
     );
   }
 
+  function handleOpenModal(item: CurrencyData) {
+    setSelectedCurrency(item);
+    setModalVisible(true);
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -54,9 +66,36 @@ export default function CurrenciesScreen() {
             name={item.name}
             value={Number(item.buy)}
             variation={Number(item.variation)}
+            onPress={() => handleOpenModal(item)}
           />
         )}
       />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>{selectedCurrency?.name}</Text>
+            <Text style={styles.modalText}>
+              Compra: R$ {Number(selectedCurrency?.buy).toFixed(2)}
+            </Text>
+            <Text style={styles.modalText}>
+              Venda: R${" "}
+              {selectedCurrency?.sell
+                ? Number(selectedCurrency.sell).toFixed(2)
+                : "N/A"}
+            </Text>
+            <Text style={styles.modalText}>
+              Variação: {Number(selectedCurrency?.variation).toFixed(2)}%
+            </Text>
+            <Button title="Fechar" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -89,5 +128,37 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 16,
   },
 });
