@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+
 import { colors } from "../theme/colors";
 import { getHistoricalData } from "../services/api";
 

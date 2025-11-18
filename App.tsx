@@ -1,5 +1,6 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useEffect } from "react";
+import { ActivityIndicator, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
   useFonts,
@@ -8,13 +9,17 @@ import {
 } from "@expo-google-fonts/roboto";
 
 import Routes from "./src/routes";
-import { ActivityIndicator, View } from "react-native";
+import { useFavoritesStore } from "./src/store/favoritesStore";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_700Bold,
   });
+
+  useEffect(() => {
+    useFavoritesStore.getState().loadFavorites();
+  }, []);
 
   if (!fontsLoaded) {
     return (
