@@ -28,7 +28,7 @@ export default function Home({ navigation }: any) {
     "@highlights",
     isCurrencyData,
     5 * 60 * 1000,
-    (item) => HIGHLIGHT_ITEMS.includes(item.id)
+    (item) => HIGHLIGHT_ITEMS.includes(item.code)
   );
 
   const { articles: news, loading: newsLoading } = useNewsData({ pageSize: 3 });

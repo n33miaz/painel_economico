@@ -150,7 +150,7 @@ export default function Favorites() {
               </Text>
             )}
             {selectedItem && isCurrencyData(selectedItem) && (
-              <HistoricalChart id={selectedItem.id} />
+              <HistoricalChart currencyCode={selectedItem.id} />
             )}
             <View style={styles.buttonSeparator} />
             <Button

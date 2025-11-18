@@ -126,7 +126,7 @@ export default function Currencies() {
               Variação: {selectedCurrency?.variation.toFixed(2)}%
             </Text>
             {selectedCurrency && (
-              <HistoricalChart id={selectedCurrency.id} />
+              <HistoricalChart currencyCode={selectedCurrency.id} />
             )}
             <View style={styles.buttonSeparator} />
             <Button

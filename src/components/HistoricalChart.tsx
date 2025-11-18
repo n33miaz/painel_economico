@@ -12,13 +12,13 @@ import { colors } from "../theme/colors";
 import { getHistoricalData } from "../services/api";
 
 interface HistoricalChartProps {
-  id: string;
+  currencyCode: string;
 }
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function HistoricalChart({
-  id,
+  currencyCode,
 }: HistoricalChartProps) {
   const [chartData, setChartData] = useState<{
     labels: string[];
@@ -29,12 +29,12 @@ export default function HistoricalChart({
 
   useEffect(() => {
     const fetchChartData = async () => {
-      if (!id) return;
+      if (!currencyCode) return;
 
       try {
         setLoading(true);
         setError(null);
-        const historicalData = await getHistoricalData(id);
+        const historicalData = await getHistoricalData(currencyCode);
 
         if (historicalData.length === 0) {
           throw new Error("Dados históricos não disponíveis.");
@@ -62,7 +62,7 @@ export default function HistoricalChart({
     };
 
     fetchChartData();
-  }, [id]);
+  }, [currencyCode]);
 
   if (loading) {
     return (
