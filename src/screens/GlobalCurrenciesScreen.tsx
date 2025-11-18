@@ -13,6 +13,7 @@ import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
+import HistoricalChart from "../components/HistoricalChart";
 
 const DESIRED_CURRENCIES = ["USD", "EUR", "JPY", "GBP", "CAD"];
 
@@ -123,6 +124,10 @@ export default function GlobalCurrenciesScreen() {
             <Text style={styles.modalText}>
               Variação: {selectedCurrency?.variation.toFixed(2)}%
             </Text>
+            {selectedCurrency && (
+              <HistoricalChart currencyCode={selectedCurrency.code} />
+            )}
+            <View style={styles.buttonSeparator} />
             <Button
               title="Fechar"
               onPress={() => setModalVisible(false)}
@@ -145,7 +150,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 8, // Diminuí um pouco o padding para o card não ficar colado no topo
+    paddingTop: 8,
     backgroundColor: colors.background,
   },
   loadingText: {
@@ -166,7 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.transparent,
   },
   modalView: {
-    margin: 20,
+    margin: "90%",
     backgroundColor: colors.cardBackground,
     borderRadius: 20,
     padding: 35,
@@ -189,5 +194,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     color: colors.textSecondary,
+  },
+  buttonSeparator: {
+    borderBottomColor: "#e0e0e0",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width: "100%",
+    marginVertical: 15,
   },
 });

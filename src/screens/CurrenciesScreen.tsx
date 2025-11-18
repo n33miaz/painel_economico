@@ -13,6 +13,7 @@ import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
+import HistoricalChart from "../components/HistoricalChart";
 
 export default function CurrenciesScreen() {
   const {
@@ -20,11 +21,7 @@ export default function CurrenciesScreen() {
     loading,
     error,
     fetchData: refreshCurrencies,
-  } = useApiData<CurrencyData>(
-    "/all",
-    "@currencies",
-    isCurrencyData
-  );
+  } = useApiData<CurrencyData>("/all", "@currencies", isCurrencyData);
 
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -109,6 +106,10 @@ export default function CurrenciesScreen() {
             <Text style={styles.modalText}>
               Variação: {selectedCurrency?.variation.toFixed(2)}%
             </Text>
+            {selectedCurrency && (
+              <HistoricalChart currencyCode={selectedCurrency.code} />
+            )}
+            <View style={styles.buttonSeparator} />
             <Button
               title="Fechar"
               onPress={() => setModalVisible(false)}
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.transparent,
   },
   modalView: {
-    margin: 20,
+    margin: "90%",
     backgroundColor: colors.cardBackground,
     borderRadius: 20,
     padding: 35,
@@ -177,5 +178,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     color: colors.textSecondary,
+  },
+  buttonSeparator: {
+    borderBottomColor: "#e0e0e0",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width: "100%",
+    marginVertical: 15,
   },
 });

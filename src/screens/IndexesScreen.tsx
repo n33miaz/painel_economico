@@ -13,6 +13,7 @@ import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { IndexData, isIndexData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
+import HistoricalChart from "../components/HistoricalChart";
 
 const DESIRED_INDEXES = ["IBOVESPA", "CDI", "SELIC"];
 
@@ -109,6 +110,10 @@ export default function IndexesScreen() {
             <Text style={styles.modalText}>
               Variação: {selectedIndex?.variation.toFixed(2)}%
             </Text>
+            {selectedCurrency && (
+              <HistoricalChart currencyCode={selectedCurrency.code} />
+            )}
+            <View style={styles.buttonSeparator} />
             <Button
               title="Fechar"
               onPress={() => setModalVisible(false)}
@@ -151,7 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.transparent,
   },
   modalView: {
-    margin: 20,
+    margin: "90%",
     backgroundColor: colors.cardBackground,
     borderRadius: 20,
     padding: 35,
@@ -177,5 +182,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     color: colors.textSecondary,
+  },
+  buttonSeparator: {
+    borderBottomColor: "#e0e0e0",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width: "100%",
+    marginVertical: 15,
   },
 });
