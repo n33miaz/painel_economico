@@ -38,3 +38,24 @@ export function isIndexData(item: any): item is IndexData {
     typeof item.variation !== "undefined"
   );
 }
+
+export interface HistoricalDataPoint {
+  timestamp: string;
+  high: string;
+}
+
+export const getHistoricalData = async (
+  currencyCode: string,
+  days: number = 7
+): Promise<HistoricalDataPoint[]> => {
+  try {
+    const response = await api.get(`/daily/${currencyCode}-BRL/${days}`);
+    if (response.status === 200 && Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
+  } catch (error) {
+    console.error("Erro ao buscar dados históricos:", error);
+    throw error;
+  }
+};
