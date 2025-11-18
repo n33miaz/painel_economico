@@ -6,12 +6,12 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { colors } from "../theme/colors";
 
-import HomeScreen from "../screens/HomeScreen";
-import CurrenciesScreen from "../screens/CurrenciesScreen";
-import GlobalCurrenciesScreen from "../screens/GlobalCurrenciesScreen";
-import IndexesScreen from "../screens/IndexesScreen";
-import NewsScreen from "../screens/NewsScreen";
-import AboutScreen from "../screens/AboutScreen";
+import Home from "../screens/Home";
+import Currencies from "../screens/Currencies";
+import GlobalCurrencies from "../screens/GlobalCurrencies";
+import Indexes from "../screens/Indexes";
+import News from "../screens/News";
+import About from "../screens/About";
 
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
@@ -37,9 +37,9 @@ function TabNavigator() {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Moedas" component={CurrenciesScreen} />
-      <Tab.Screen name="Índices" component={IndexesScreen} />
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Moedas" component={Currencies} />
+      <Tab.Screen name="Índices" component={Indexes} />
     </Tab.Navigator>
   );
 }
@@ -52,9 +52,9 @@ function DrawerNavigator() {
         component={TabNavigator}
         options={{ title: "Dashboard Brasil" }}
       />
-      <Drawer.Screen name="Moedas Globais" component={GlobalCurrenciesScreen} />
-      <Drawer.Screen name="Notícias" component={NewsScreen} />
-      <Drawer.Screen name="Sobre" component={AboutScreen} />
+      <Drawer.Screen name="Moedas Globais" component={GlobalCurrencies} />
+      <Drawer.Screen name="Notícias" component={News} />
+      <Drawer.Screen name="Sobre" component={About} />
     </Drawer.Navigator>
   );
 }
