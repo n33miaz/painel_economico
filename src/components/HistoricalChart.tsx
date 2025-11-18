@@ -39,12 +39,14 @@ export default function HistoricalChart({
           throw new Error("Dados históricos não disponíveis.");
         }
 
-        const reversedData = historicalData.reverse();
+        const reversedData = [...historicalData].reverse();
+        const labels = reversedData.map((point) => {
+          const date = new Date(Number(point.timestamp) * 1000);
+          return `${date.getDate()}/${date.getMonth() + 1}`;
+        });
 
         setChartData({
-          labels: reversedData.map(
-            (_, index) => `D-${reversedData.length - index}`
-          ),
+          labels: labels,
           datasets: [
             {
               data: reversedData.map((point) => parseFloat(point.high)),
@@ -92,7 +94,7 @@ export default function HistoricalChart({
           backgroundGradientTo: colors.cardBackground,
           decimalPlaces: 2,
           color: (opacity = 1) => `rgba(0, 122, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(28, 28, 30, ${opacity})`,
           style: {
             borderRadius: 16,
           },

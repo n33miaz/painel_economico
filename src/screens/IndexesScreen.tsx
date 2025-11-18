@@ -13,7 +13,6 @@ import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { IndexData, isIndexData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
-import HistoricalChart from "../components/HistoricalChart";
 
 const DESIRED_INDEXES = ["IBOVESPA", "CDI", "SELIC"];
 
@@ -110,9 +109,6 @@ export default function IndexesScreen() {
             <Text style={styles.modalText}>
               Variação: {selectedIndex?.variation.toFixed(2)}%
             </Text>
-            {selectedIndex  && (
-              <HistoricalChart currencyCode={selectedIndex.name} />
-            )}
             <View style={styles.buttonSeparator} />
             <Button
               title="Fechar"
