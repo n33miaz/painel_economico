@@ -11,7 +11,6 @@ import {
 } from "react-native";
 
 import { colors } from "../theme/colors";
-import { useFavoritesStore } from "../store/favoritesStore";
 import useApiData from "../hooks/useApiData";
 import {
   CurrencyData,
@@ -22,6 +21,7 @@ import {
 import IndicatorCard from "../components/IndicatorCard";
 import HistoricalChart from "../components/HistoricalChart";
 import DetailsModal from "../components/DetailsModal";
+import { useFavoritesStore } from "../store/favoritesStore";
 
 type CombinedData = CurrencyData | IndexData;
 

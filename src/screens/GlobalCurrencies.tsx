@@ -5,7 +5,6 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
-  Modal,
   Button,
   LayoutAnimation,
 } from "react-native";
@@ -15,17 +14,10 @@ import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
 import HistoricalChart from "../components/HistoricalChart";
+import DetailsModal from "../components/DetailsModal";
 import { useFavoritesStore } from "../store/favoritesStore";
 
 const DESIRED_CURRENCIES = ["USD", "EUR", "JPY", "GBP", "CAD"];
-
-const currencySymbols: { [key: string]: string } = {
-  USD: "$",
-  EUR: "€",
-  JPY: "¥",
-  GBP: "£",
-  CAD: "$",
-};
 
 export default function GlobalCurrencies() {
   const {
@@ -67,6 +59,10 @@ export default function GlobalCurrencies() {
   function handleOpenModal(item: CurrencyData) {
     setSelectedCurrency(item);
     setModalVisible(true);
+  }
+
+  function handleCloseModal() {
+    setModalVisible(false);
   }
 
   if (loading && !isRefreshing) {
@@ -121,39 +117,25 @@ export default function GlobalCurrencies() {
         }
       />
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>{selectedCurrency?.name}</Text>
-            <Text style={styles.modalText}>
-              Compra (em BRL): R$ {selectedCurrency?.buy.toFixed(2)}
-            </Text>
-            <Text style={styles.modalText}>
-              Venda (em BRL): R${" "}
-              {selectedCurrency?.sell
-                ? selectedCurrency.sell.toFixed(2)
-                : "N/A"}
-            </Text>
-            <Text style={styles.modalText}>
-              Variação: {selectedCurrency?.variation.toFixed(2)}%
-            </Text>
-            {selectedCurrency && (
-              <HistoricalChart currencyCode={selectedCurrency.id} />
-            )}
-            <View style={styles.buttonSeparator} />
-            <Button
-              title="Fechar"
-              onPress={() => setModalVisible(false)}
-              color={colors.primary}
-            />
-          </View>
-        </View>
-      </Modal>
+      {selectedCurrency && (
+        <DetailsModal
+          visible={modalVisible}
+          onClose={handleCloseModal}
+          title={selectedCurrency.name}
+        >
+          <Text style={styles.modalText}>
+            Compra (em BRL): R$ {selectedCurrency.buy.toFixed(2)}
+          </Text>
+          <Text style={styles.modalText}>
+            Venda (em BRL): R${" "}
+            {selectedCurrency.sell ? selectedCurrency.sell.toFixed(2) : "N/A"}
+          </Text>
+          <Text style={styles.modalText}>
+            Variação: {selectedCurrency.variation.toFixed(2)}%
+          </Text>
+          <HistoricalChart currencyCode={selectedCurrency.id} />
+        </DetailsModal>
+      )}
     </View>
   );
 }
@@ -182,42 +164,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.transparent,
-  },
-  modalView: {
-    width: "90%",
-    margin: 20,
-    backgroundColor: colors.cardBackground,
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.textPrimary,
-  },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 16,
     color: colors.textSecondary,
-  },
-  buttonSeparator: {
-    borderBottomColor: "#e0e0e0",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    width: "100%",
-    marginVertical: 15,
   },
 });
