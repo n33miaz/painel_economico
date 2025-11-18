@@ -9,37 +9,11 @@ import {
 } from "react-native";
 
 import { colors } from "../theme/colors";
-import newsApi, { NewsArticle } from "../services/newsApi";
 import NewsCard from "../components/NewsCard";
+import useNewsData from "../hooks/useNewsData";
 
 export default function NewsScreen() {
-  const [articles, setArticles] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await newsApi.get("/top-headlines", {
-          params: {
-            country: "br",
-            category: "business",
-            pageSize: 20,
-          },
-        });
-        setArticles(response.data.articles);
-      } catch (e: any) {
-        setError("Não foi possível carregar as notícias.");
-        console.error(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, []);
+  const { articles, loading, error } = useNewsData({ pageSize: 20 });
 
   if (loading) {
     return (

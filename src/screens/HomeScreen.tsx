@@ -13,7 +13,7 @@ import Constants from "expo-constants";
 import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
-import newsApi, { NewsArticle } from "../services/newsApi";
+import useNewsData from "../hooks/useNewsData";
 import HighlightCard from "../components/HighlightCard";
 
 const HIGHLIGHT_ITEMS = ["USD", "EUR", "CAD"];
@@ -31,30 +31,7 @@ export default function HomeScreen({ navigation }: any) {
     (item) => HIGHLIGHT_ITEMS.includes(item.code)
   );
 
-  const [news, setNews] = useState<NewsArticle[]>([]);
-  const [newsLoading, setNewsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchNewsForHome = async () => {
-      try {
-        setNewsLoading(true);
-        const response = await newsApi.get("/top-headlines", {
-          params: {
-            country: "br",
-            category: "business",
-            pageSize: 3,
-          },
-        });
-        setNews(response.data.articles);
-      } catch (e) {
-        console.error("Erro ao buscar notícias para a home:", e);
-      } finally {
-        setNewsLoading(false);
-      }
-    };
-
-    fetchNewsForHome();
-  }, []);
+  const { articles: news, loading: newsLoading } = useNewsData({ pageSize: 3 });
 
   const getIconForCode = (code: string) => {
     switch (code) {
