@@ -62,6 +62,22 @@ export default function Indexes() {
     setModalVisible(false);
   }
 
+  const renderIndexCard = useCallback(
+    ({ item }: { item: IndexData }) => (
+      <IndicatorCard
+        name={item.name}
+        id={item.id}
+        value={item.points || item.variation}
+        variation={item.variation}
+        symbol={item.name !== "IBOVESPA" ? "" : "pts"}
+        isFavorite={favorites.includes(item.id)}
+        onPress={() => handleOpenModal(item)}
+        onToggleFavorite={handleToggleFavorite}
+      />
+    ),
+    [favorites, handleToggleFavorite]
+  );
+
   if (loading && !indexes) {
     return (
       <View style={styles.centered}>
@@ -94,18 +110,7 @@ export default function Indexes() {
         maxToRenderPerBatch={10}
         data={indexes || []}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <IndicatorCard
-            name={item.name}
-            id={item.id}
-            value={item.points || item.variation}
-            variation={item.variation}
-            symbol={item.name !== "IBOVESPA" ? "" : "pts"}
-            isFavorite={favorites.includes(item.id)}
-            onPress={() => handleOpenModal(item)}
-            onToggleFavorite={handleToggleFavorite}
-          />
-        )}
+        renderItem={renderIndexCard}
         onRefresh={onRefresh}
         refreshing={refreshing}
         ListEmptyComponent={

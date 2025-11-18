@@ -76,7 +76,7 @@ export default function Favorites() {
     );
   }
 
-  const renderCard = useCallback(
+  const renderFavoriteCard = useCallback(
     ({ item }: { item: CombinedData }) => {
       const isIndex = isIndexData(item);
       const isCurrency = isCurrencyData(item);
@@ -113,7 +113,7 @@ export default function Favorites() {
           />
         }
         keyExtractor={(item) => item.id}
-        renderItem={renderCard}
+        renderItem={renderFavoriteCard}
         ListHeaderComponent={
           <Text style={styles.headerTitle}>Meus Favoritos</Text>
         }

@@ -56,14 +56,29 @@ export default function GlobalCurrencies() {
     setIsRefreshing(false);
   }, [refreshData]);
 
-  function handleOpenModal(item: CurrencyData) {
+  const handleOpenModal = useCallback((item: CurrencyData) => {
     setSelectedCurrency(item);
     setModalVisible(true);
-  }
+  }, []);
 
   function handleCloseModal() {
     setModalVisible(false);
   }
+
+  const renderCurrencyCard = useCallback(
+    ({ item }: { item: CurrencyData }) => (
+      <IndicatorCard
+        name={item.name}
+        id={item.id}
+        value={item.buy}
+        variation={item.variation}
+        isFavorite={favorites.includes(item.id)}
+        onPress={() => handleOpenModal(item)}
+        onToggleFavorite={handleToggleFavorite}
+      />
+    ),
+    [favorites, handleToggleFavorite, handleOpenModal]
+  );
 
   if (loading && !isRefreshing) {
     return (
@@ -97,17 +112,7 @@ export default function GlobalCurrencies() {
         maxToRenderPerBatch={10}
         data={currencies || []}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <IndicatorCard
-            name={item.name}
-            id={item.id}
-            value={item.buy}
-            variation={item.variation}
-            isFavorite={favorites.includes(item.id)}
-            onPress={() => handleOpenModal(item)}
-            onToggleFavorite={handleToggleFavorite}
-          />
-        )}
+        renderItem={renderCurrencyCard}
         onRefresh={handleRefresh}
         refreshing={isRefreshing}
         ListEmptyComponent={

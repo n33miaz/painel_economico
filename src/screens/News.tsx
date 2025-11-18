@@ -12,6 +12,7 @@ import {
 import { colors } from "../theme/colors";
 import NewsCard from "../components/NewsCard";
 import useNewsData from "../hooks/useNewsData";
+import { NewsArticle } from "../services/newsApi";
 
 export default function News() {
   const { articles, loading, error, fetchNews } = useNewsData({ pageSize: 20 });
@@ -23,6 +24,11 @@ export default function News() {
     await fetchNews();
     setRefreshing(false);
   }, [fetchNews]);
+
+  const renderNewsCard = useCallback(
+    ({ item }: { item: NewsArticle }) => <NewsCard article={item} />,
+    []
+  );
 
   if (loading) {
     return (
@@ -57,7 +63,7 @@ export default function News() {
             tintColor={colors.primary}
           />
         }
-        renderItem={({ item }) => <NewsCard article={item} />}
+        renderItem={renderNewsCard}
         ListHeaderComponent={
           <Text style={styles.headerTitle}>Principais Notícias</Text>
         }
