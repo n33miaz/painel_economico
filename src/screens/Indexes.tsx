@@ -5,7 +5,6 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
-  Modal,
   Button,
   LayoutAnimation,
 } from "react-native";
@@ -14,6 +13,7 @@ import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { IndexData, isIndexData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
+import DetailsModal from "../components/DetailsModal";
 import { useFavoritesStore } from "../store/favoritesStore";
 
 const DESIRED_INDEXES = ["IBOVESPA", "CDI", "SELIC"];
@@ -56,6 +56,10 @@ export default function Indexes() {
   function handleOpenModal(item: IndexData) {
     setSelectedIndex(item);
     setModalVisible(true);
+  }
+
+  function handleCloseModal() {
+    setModalVisible(false);
   }
 
   if (loading && !indexes) {
@@ -111,32 +115,22 @@ export default function Indexes() {
         }
       />
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>{selectedIndex?.name}</Text>
-            {selectedIndex?.points !== undefined && (
-              <Text style={styles.modalText}>
-                Pontos: {selectedIndex?.points.toFixed(2)}
-              </Text>
-            )}
+      {selectedIndex && (
+        <DetailsModal
+          visible={modalVisible}
+          onClose={handleCloseModal}
+          title={selectedIndex.name}
+        >
+          {selectedIndex.points !== undefined && (
             <Text style={styles.modalText}>
-              Variação: {selectedIndex?.variation.toFixed(2)}%
+              Pontos: {selectedIndex.points.toFixed(2)}
             </Text>
-            <View style={styles.buttonSeparator} />
-            <Button
-              title="Fechar"
-              onPress={() => setModalVisible(false)}
-              color={colors.primary}
-            />
-          </View>
-        </View>
-      </Modal>
+          )}
+          <Text style={styles.modalText}>
+            Variação: {selectedIndex.variation.toFixed(2)}%
+          </Text>
+        </DetailsModal>
+      )}
     </View>
   );
 }
@@ -164,45 +158,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.transparent,
-  },
-  modalView: {
-    width: "90%",
-    margin: 20,
-    backgroundColor: colors.cardBackground,
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalTitle: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.textPrimary,
-  },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
     fontSize: 16,
     color: colors.textSecondary,
-  },
-  buttonSeparator: {
-    borderBottomColor: "#e0e0e0",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    width: "100%",
-    marginVertical: 15,
+    fontFamily: "Roboto_400Regular",
   },
 });
