@@ -12,7 +12,7 @@ import { colors } from "../theme/colors";
 import NewsCard from "../components/NewsCard";
 import useNewsData from "../hooks/useNewsData";
 
-export default function NewsScreen() {
+export default function News() {
   const { articles, loading, error } = useNewsData({ pageSize: 20 });
 
   if (loading) {

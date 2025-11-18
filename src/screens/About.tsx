@@ -15,7 +15,7 @@ import { colors } from "../theme/colors";
 const LINKEDIN_URL = "https://www.linkedin.com/in/neemiasmanso/";
 const GITHUB_URL = "https://github.com/n33miaz";
 
-export default function AboutScreen() {
+export default function About() {
   const handleLinkPress = (url: string) => {
     Linking.openURL(url);
   };

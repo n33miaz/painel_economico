@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useEffect } from "react";
+import React from "react";
 import { ActivityIndicator, View, UIManager, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -10,17 +10,17 @@ import {
 
 import Routes from "./src/routes";
 
+if (Platform.OS === "android") {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_700Bold,
   });
-
-  if (Platform.OS === "android") {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-  }
 
   if (!fontsLoaded) {
     return (

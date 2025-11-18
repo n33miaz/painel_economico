@@ -18,7 +18,7 @@ import HighlightCard from "../components/HighlightCard";
 
 const HIGHLIGHT_ITEMS = ["USD", "EUR", "CAD"];
 
-export default function HomeScreen({ navigation }: any) {
+export default function Home({ navigation }: any) {
   const {
     data: highlights,
     loading: highlightsLoading,

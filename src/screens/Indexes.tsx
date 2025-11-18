@@ -7,6 +7,7 @@ import {
   Text,
   Modal,
   Button,
+  LayoutAnimation,
 } from "react-native";
 
 import { colors } from "../theme/colors";
@@ -17,7 +18,7 @@ import { useFavoritesStore } from "../store/favoritesStore";
 
 const DESIRED_INDEXES = ["IBOVESPA", "CDI", "SELIC"];
 
-export default function IndexesScreen() {
+export default function Indexes() {
   const {
     data: indexes,
     loading,
@@ -37,6 +38,14 @@ export default function IndexesScreen() {
 
   const favorites = useFavoritesStore((state) => state.favorites);
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+
+  const handleToggleFavorite = useCallback(
+    (code: string) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      toggleFavorite(code);
+    },
+    [toggleFavorite]
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -87,7 +96,7 @@ export default function IndexesScreen() {
             symbol={item.name !== "IBOVESPA" ? "" : "pts"}
             isFavorite={favorites.includes(item.name)}
             onPress={() => handleOpenModal(item)}
-            onToggleFavorite={toggleFavorite}
+            onToggleFavorite={handleToggleFavorite}
           />
         )}
         onRefresh={onRefresh}

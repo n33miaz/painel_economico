@@ -7,6 +7,7 @@ import {
   Text,
   Modal,
   Button,
+  LayoutAnimation,
 } from "react-native";
 
 import { colors } from "../theme/colors";
@@ -26,7 +27,7 @@ const currencySymbols: { [key: string]: string } = {
   CAD: "$",
 };
 
-export default function GlobalCurrenciesScreen() {
+export default function GlobalCurrencies() {
   const {
     data: currencies,
     loading,
@@ -48,6 +49,14 @@ export default function GlobalCurrenciesScreen() {
 
   const favorites = useFavoritesStore((state) => state.favorites);
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+
+  const handleToggleFavorite = useCallback(
+    (code: string) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      toggleFavorite(code);
+    },
+    [toggleFavorite]
+  );
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -97,7 +106,7 @@ export default function GlobalCurrenciesScreen() {
             variation={item.variation}
             isFavorite={favorites.includes(item.code)}
             onPress={() => handleOpenModal(item)}
-            onToggleFavorite={toggleFavorite}
+            onToggleFavorite={handleToggleFavorite}
           />
         )}
         onRefresh={handleRefresh}

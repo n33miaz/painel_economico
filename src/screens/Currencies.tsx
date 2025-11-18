@@ -17,7 +17,7 @@ import IndicatorCard from "../components/IndicatorCard";
 import HistoricalChart from "../components/HistoricalChart";
 import { useFavoritesStore } from "../store/favoritesStore";
 
-export default function CurrenciesScreen() {
+export default function Currencies() {
   const {
     data: currencies,
     loading,
@@ -33,6 +33,14 @@ export default function CurrenciesScreen() {
 
   const favorites = useFavoritesStore((state) => state.favorites);
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+
+  const handleToggleFavorite = useCallback(
+    (code: string) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      toggleFavorite(code);
+    },
+    [toggleFavorite]
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -81,7 +89,7 @@ export default function CurrenciesScreen() {
             variation={item.variation}
             isFavorite={favorites.includes(item.code)}
             onPress={() => handleOpenModal(item)}
-            onToggleFavorite={toggleFavorite}
+            onToggleFavorite={handleToggleFavorite}
           />
         )}
         onRefresh={onRefresh}

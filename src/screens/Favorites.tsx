@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   SafeAreaView,
-  UIManager,
-  Platform,
   LayoutAnimation,
   ActivityIndicator,
 } from "react-native";
@@ -24,13 +22,6 @@ import { colors } from "../theme/colors";
 
 type CombinedData = CurrencyData | IndexData;
 
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
-
 export default function Favorites() {
   const { data: allData, loading } = useApiData<CombinedData>(
     "/all",
@@ -41,10 +32,13 @@ export default function Favorites() {
   const favorites = useFavoritesStore((state) => state.favorites);
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
 
-  const handleToggleFavorite = (code: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    toggleFavorite(code);
-  };
+  const handleToggleFavorite = useCallback(
+    (code: string) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      toggleFavorite(code);
+    },
+    [toggleFavorite]
+  );
 
   const favoriteItems = React.useMemo(() => {
     if (!allData) return [];
@@ -78,7 +72,7 @@ export default function Favorites() {
               variation={item.variation}
               isFavorite={true}
               onPress={() => {
-                alert("Funcionalide de Modal em breve.") // TODO
+                alert("Funcionalide de Modal em breve."); // TODO
               }}
               onToggleFavorite={handleToggleFavorite}
               symbol={isIndex && item.name === "IBOVESPA" ? "pts" : "R$"}
