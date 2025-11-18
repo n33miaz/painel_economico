@@ -14,6 +14,7 @@ import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
 import HistoricalChart from "../components/HistoricalChart";
+import { useFavoritesStore } from "../store/favoritesStore";
 
 export default function CurrenciesScreen() {
   const {
@@ -28,6 +29,9 @@ export default function CurrenciesScreen() {
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyData | null>(
     null
   );
+
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -71,9 +75,12 @@ export default function CurrenciesScreen() {
         renderItem={({ item }) => (
           <IndicatorCard
             name={item.name}
+            code={item.code}
             value={item.buy}
             variation={item.variation}
+            isFavorite={favorites.includes(item.code)}
             onPress={() => handleOpenModal(item)}
+            onToggleFavorite={toggleFavorite}
           />
         )}
         onRefresh={onRefresh}

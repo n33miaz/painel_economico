@@ -13,6 +13,7 @@ import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { IndexData, isIndexData } from "../services/api";
 import IndicatorCard from "../components/IndicatorCard";
+import { useFavoritesStore } from "../store/favoritesStore";
 
 const DESIRED_INDEXES = ["IBOVESPA", "CDI", "SELIC"];
 
@@ -33,6 +34,9 @@ export default function IndexesScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<IndexData | null>(null);
+
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -77,10 +81,13 @@ export default function IndexesScreen() {
         renderItem={({ item }) => (
           <IndicatorCard
             name={item.name}
+            code={item.name}
             value={item.points || item.variation}
             variation={item.variation}
             symbol={item.name !== "IBOVESPA" ? "" : "pts"}
+            isFavorite={favorites.includes(item.name)}
             onPress={() => handleOpenModal(item)}
+            onToggleFavorite={toggleFavorite}
           />
         )}
         onRefresh={onRefresh}

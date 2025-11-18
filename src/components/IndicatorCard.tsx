@@ -6,39 +6,65 @@ import { colors } from "../theme/colors";
 
 interface IndicatorCardProps {
   name: string;
+  code: string;
   value: number;
   variation: number;
-  symbol?: string;
+  isFavorite: boolean;
   onPress: () => void;
+  onToggleFavorite: (code: string) => void;
+  symbol?: string;
 }
 
 export default function IndicatorCard({
   name,
+  code,
   value,
   variation,
-  symbol = "R$",
+  isFavorite,
   onPress,
+  onToggleFavorite,
+  symbol = "R$",
 }: IndicatorCardProps) {
   const isPositive = variation >= 0;
   const variationColor = isPositive ? colors.success : colors.danger;
 
+  const handleFavoritePress = (e: any) => {
+    e.stopPropagation();
+    onToggleFavorite(code);
+  };
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <View>
+      <View style={styles.content}>
         <Text style={styles.cardTitle}>{name.split("/")[0]}</Text>
         <Text style={styles.cardValue}>
           {symbol} {value.toFixed(2)}
         </Text>
       </View>
-      <View
-        style={[styles.variationContainer, { backgroundColor: variationColor }]}
-      >
-        <Ionicons
-          name={isPositive ? "arrow-up" : "arrow-down"}
-          size={16}
-          color={colors.textLight}
-        />
-        <Text style={styles.variationText}>{variation.toFixed(2)}%</Text>
+      <View style={styles.actions}>
+        <View
+          style={[
+            styles.variationContainer,
+            { backgroundColor: variationColor },
+          ]}
+        >
+          <Ionicons
+            name={isPositive ? "arrow-up" : "arrow-down"}
+            size={16}
+            color={colors.textLight}
+          />
+          <Text style={styles.variationText}>{variation.toFixed(2)}%</Text>
+        </View>
+        <TouchableOpacity
+          onPress={handleFavoritePress}
+          style={styles.starButton}
+        >
+          <Ionicons
+            name={isFavorite ? "star" : "star-outline"}
+            size={28}
+            color={isFavorite ? colors.warning : colors.inactive}
+          />
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -60,6 +86,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  content: {
+    flex: 1,
+  },
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -69,6 +98,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: colors.textSecondary,
     marginTop: 4,
+  },
+  actions: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   variationContainer: {
     flexDirection: "row",
@@ -82,5 +115,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginLeft: 4,
+  },
+  starButton: {
+    marginLeft: 16,
+    padding: 4,
   },
 });
