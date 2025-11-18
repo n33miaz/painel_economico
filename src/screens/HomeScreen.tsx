@@ -1,25 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
+  Linking,
 } from "react-native";
 import Constants from "expo-constants";
 
 import { colors } from "../theme/colors";
 import useApiData from "../hooks/useApiData";
 import { CurrencyData, isCurrencyData } from "../services/api";
+import newsApi, { NewsArticle } from "../services/newsApi";
 import HighlightCard from "../components/HighlightCard";
 
 const HIGHLIGHT_ITEMS = ["USD", "EUR", "CAD"];
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: any) {
   const {
     data: highlights,
-    loading,
-    error,
+    loading: highlightsLoading,
+    error: highlightsError,
   } = useApiData<CurrencyData>(
     "/all",
     "@highlights",
@@ -27,6 +30,31 @@ export default function HomeScreen() {
     5 * 60 * 1000,
     (item) => HIGHLIGHT_ITEMS.includes(item.code)
   );
+
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  const [newsLoading, setNewsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNewsForHome = async () => {
+      try {
+        setNewsLoading(true);
+        const response = await newsApi.get("/top-headlines", {
+          params: {
+            country: "br",
+            category: "business",
+            pageSize: 3,
+          },
+        });
+        setNews(response.data.articles);
+      } catch (e) {
+        console.error("Erro ao buscar notícias para a home:", e);
+      } finally {
+        setNewsLoading(false);
+      }
+    };
+
+    fetchNewsForHome();
+  }, []);
 
   const getIconForCode = (code: string) => {
     switch (code) {
@@ -48,7 +76,7 @@ export default function HomeScreen() {
         <Text style={styles.subtitle}>Resumo do mercado hoje</Text>
       </View>
 
-      {loading && (
+      {highlightsLoading && (
         <ActivityIndicator
           size="large"
           color={colors.primary}
@@ -56,7 +84,7 @@ export default function HomeScreen() {
         />
       )}
 
-      {error && (
+      {highlightsError && (
         <Text style={styles.errorText}>
           Não foi possível carregar os destaques.
         </Text>
@@ -74,14 +102,30 @@ export default function HomeScreen() {
         ))}
       </View>
 
-      {/* Futuramente, aqui entrará a seção de notícias */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Últimas Notícias</Text>
-        <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>
-            (A seção de notícias será implementada em breve)
-          </Text>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Últimas Notícias</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Notícias")}>
+            <Text style={styles.seeAll}>Ver todas</Text>
+          </TouchableOpacity>
         </View>
+
+        {newsLoading ? (
+          <ActivityIndicator color={colors.primary} />
+        ) : (
+          news.map((article) => (
+            <TouchableOpacity
+              key={article.url}
+              style={styles.newsItem}
+              onPress={() => Linking.openURL(article.url)}
+            >
+              <Text style={styles.newsSource}>{article.source.name}</Text>
+              <Text style={styles.newsTitle} numberOfLines={2}>
+                {article.title}
+              </Text>
+            </TouchableOpacity>
+          ))
+        )}
       </View>
     </ScrollView>
   );
@@ -108,9 +152,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   highlightRow: {
-    flexWrap: "wrap",
-    justifyContent: "space-between",
     paddingHorizontal: 16,
+    flexDirection: "row",
   },
   errorText: {
     textAlign: "center",
@@ -121,20 +164,36 @@ const styles = StyleSheet.create({
     marginTop: 32,
     paddingHorizontal: 24,
   },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
   sectionTitle: {
     fontSize: 20,
     fontFamily: "Roboto_700Bold",
     color: colors.textPrimary,
-    marginBottom: 16,
   },
-  placeholder: {
+  seeAll: {
+    fontSize: 14,
+    color: colors.primary,
+    fontWeight: "bold",
+  },
+  newsItem: {
     backgroundColor: colors.cardBackground,
-    height: 150,
-    borderRadius: 16,
-    justifyContent: "center",
-    alignItems: "center",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
   },
-  placeholderText: {
+  newsSource: {
     color: colors.textSecondary,
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  newsTitle: {
+    color: colors.textPrimary,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
